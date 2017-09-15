@@ -6,17 +6,52 @@
     </div>
 
     <div data-role="content">
-        <p>你们这群傻逼</p>
+        <form>
+            <div data-role="fieldcontain">
+                <label for="name">全名：</label>
+                <input type="text" name="text" id="name" value="" placeholder="你的姓名是？">
+            </div>
+
+            <div data-role="fieldcontain">
+                <label for="date">手机：</label>
+                <input type="text" name="mobile" id="mobile" value="" placeholder="你的手机号码是？">
+            </div>
+        </form>
+
     </div>
 
     <div data-role="footer" data-position="fixed">
         <div data-role="navbar">
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Credits</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a onclick="submit()">下一步</a></li>
             </ul>
         </div>
     </div>
 
 </div>
+
+<script>
+    function submit() {
+        var name = $("#name").val();
+        var mobile = $("#mobile").val();
+        var nameRex = new RegExp("^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9])*$");
+        if (!nameRex.test(name)){
+            alert("请输入正确的姓名");
+            return false;
+        }
+        alert(mobile);
+        var mobileRex = new RegExp("^1[0-9]\d{9}$");
+        if (!mobileRex.test(mobile)){
+            alert("请输入正确的手机号");
+            return false;
+        }
+        $.post("identity.do",
+                {
+                    name: $("#name").val(),
+                    mobile: $("#mobile").val()
+                },
+                function (data, status) {
+                    location.href="second.html";
+                });
+    }
+</script>

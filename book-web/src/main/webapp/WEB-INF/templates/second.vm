@@ -1,0 +1,21 @@
+#set( $page_title = $!{title} )
+<div data-role="page">
+
+    <div data-role="header" data-position="fixed">
+        <h1>实验</h1>
+    </div>
+
+    <div data-role="content">
+
+
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a onclick="submit()">下一步</a></li>
+            </ul>
+        </div>
+    </div>
+
+</div>
