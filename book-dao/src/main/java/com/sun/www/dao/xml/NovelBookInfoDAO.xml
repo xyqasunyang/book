@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.www.dao.NovelBookInfoDAO">
+    <select id="getNovelBookInfo" parameterType="java.lang.Integer"
+            resultType="com.sun.www.bean.NovelBookInfoBean">
+        select * from novel_book_info where bookInfoId = #{bookInfoId}
+    </select>
+
+    <insert id="createNovelBookInfo" parameterType="com.sun.www.bean.NovelBookInfoBean">
+        insert into novel_book_info(name, author,type,serialize,url,isDelete,createDate)
+         values(#{name}, #{author},#{type},#{serialize},#{url},0,now())
+    </insert>
+
+
+</mapper>

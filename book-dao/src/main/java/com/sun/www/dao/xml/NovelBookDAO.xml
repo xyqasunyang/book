@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.www.dao.NovelBookDAO">
+    <select id="getNovelBook" parameterType="java.lang.Integer"
+        resultType="com.sun.www.bean.NovelBookBean">
+        select * from novel_book where bookId = #{bookId}
+    </select>
+
+    <insert id="createNovelBook" parameterType="com.sun.www.bean.NovelBookBean">
+        insert into novel_book(bookInfoId, author,title,content,name,url,isDelete,createDate)
+        values(#{bookInfoId}, #{author},#{title},#{content},#{name},#{url},0,now())
+    </insert>
+
+    <select id="getNovelBookList" parameterType="com.sun.www.bean.NovelBookBean"
+        resultType="com.sun.www.bean.NovelBookBean">
+        select * from novel_book where isDelete=0
+        <if test="bookId != null">
+          and bookId = #{bookId}
+        </if>
+        <if test="bookInfoId != null">
+           and bookInfoId = #{bookInfoId}
+        </if>
+    </select>
+
+    <select id="getBookDirectory" parameterType="java.lang.Integer" resultType="com.sun.www.bean.NovelBookBean">
+        select bookInfoId,author,bookId,title,name,createDate from novel_book where bookInfoId=#{bookInfoId} ORDER BY bookId
+    </select>
+
+    <select id="getFront" parameterType="com.sun.www.bean.NovelBookBean" resultType="com.sun.www.bean.NovelBookBean">
+        select bookId from novel_book where bookId &lt; #{bookId} and bookInfoId=#{bookInfoId} ORDER BY bookId desc limit 0,1
+    </select>
+
+    <select id="getBehind" parameterType="com.sun.www.bean.NovelBookBean" resultType="com.sun.www.bean.NovelBookBean">
+        select bookId from novel_book where bookId &gt; #{bookId} and bookInfoId=#{bookInfoId} ORDER BY bookId limit 0,1
+    </select>
+</mapper>

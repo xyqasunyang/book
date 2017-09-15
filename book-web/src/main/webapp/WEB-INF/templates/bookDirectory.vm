@@ -1,0 +1,36 @@
+#set($book = $!books.get(0))
+#set( $page_title = ${book.name} )
+<style>
+    .book-content{
+        font-size: 20px;
+    }
+    .book-title{
+        margin-top: 50px;
+    }
+</style>
+<h1 class="text-center book-title">${book.name}</h1>
+<div class="container book-content">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>小说</th>
+            <th>作者</th>
+            <th>章节名</th>
+            <th>时间</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach ($book in $books)
+        <tr onclick="javascript:window.location.href='${book.bookInfoId}/${book.bookId}.html'">
+            <td>$book.name</td>
+            <td>$book.author</td>
+            <td>$book.title</td>
+            <td>$!dateTool.format('yyyy-MM-dd HH:mm:ss ',$!book.createDate)</td>
+        </tr>
+            #end
+        </tbody>
+    </table>
+
+
+
+</div>

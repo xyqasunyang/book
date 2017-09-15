@@ -1,0 +1,31 @@
+#set($book = $!books.get(0))
+#set( $page_title = ${book.title} )
+<style>
+    .book-content{
+        font-size: 20px;
+    }
+    .book-title{
+        margin-top: 50px;
+    }
+    span{
+        margin: 20px;
+        font-size: 20px;
+    }
+    .book-directory{
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+</style>
+<h1 class="text-center book-title">${book.title}</h1>
+<div class="container book-content">
+    ${book.content}
+</div>
+<div class="container text-center book-directory">
+    #if($!front)
+        <span onclick="javascript:window.location.href='${front}.html'">上一章</span>
+    #end
+        <span onclick="javascript:window.location.href='../${book.bookInfoId}.html'">目录</span>
+    #if($!behind)
+        <span onclick="javascript:window.location.href='${behind}.html'">下一章</span>
+    #end
+</div>
