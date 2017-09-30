@@ -1,11 +1,18 @@
 import com.sun.www.bean.HtmlBean;
 import com.sun.www.util.HttpClientUtil;
+import com.sun.www.util.StringUtil;
+import com.sun.www.util.VelocityUtil;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.junit.Test;
+import sun.applet.Main;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -102,15 +109,15 @@ public class MainTest {
             return element;
         } else if (path.indexOf(".") != -1) {
             String[] tags = path.split("\\.");
-            element = element.getElementsByAttributeValue("class",tags[1]).get(0);
+            element = element.getElementsByAttributeValue("class", tags[1]).get(0);
             return element;
-        }else if(path.indexOf(".")==-1&&path.indexOf(":")==-1){
+        } else if (path.indexOf(".") == -1 && path.indexOf(":") == -1) {
             element = element.getElementsByTag(path).get(0);
             return element;
-        }else if(path.indexOf(":")!=-1){
+        } else if (path.indexOf(":") != -1) {
 //            String tag = path.split(":")[0].trim();
             String index = path.split("\\(")[1].split("\\)")[0];
-            element = element.getElementsByIndexEquals(Integer.valueOf(index)-1).get(0);
+            element = element.getElementsByIndexEquals(Integer.valueOf(index) - 1).get(0);
             return element;
         }
         return element;
@@ -118,7 +125,34 @@ public class MainTest {
 
 
     @Test
-    public void test2(){
+    public void test2() {
         HtmlBean htmlBean = new HtmlBean().stringField("title").csspath("#blogBody > div > ul:nth-child(9) > li:nth-child(1) > p");
+    }
+
+    @Test
+    public void test3() throws Exception {
+        Properties p = new Properties();
+        p.load(MainTest.class.getResourceAsStream("jdbc.properties"));
+        Connection connection = DriverManager.getConnection(p.getProperty("jdbc_url"), p.getProperty("jdbc_username"), p.getProperty("jdbc_password"));
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT\n" +
+                "\t*\n" +
+                "FROM\n" +
+                "\tinformation_schema. COLUMNS\n" +
+                "WHERE\n" +
+                "\ttable_schema = 'juhuatang'\n" +
+                "AND table_name = 'dota_game';");
+        List<String[]> list = new ArrayList<>();
+        while (rs.next()) {
+            String id = rs.getString("COLUMN_NAME");
+            String type = rs.getString("DATA_TYPE");
+            String descrption = rs.getString("COLUMN_COMMENT");
+            list.add(new String[]{type.equals("varchar") ? "String" : type, id, StringUtil.captureName(id)});
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("attrs", list);
+        map.put("classNameLowCase", "teacher");
+        map.put("classNameUpCase", "Teacher");
+        VelocityUtil.template("ActionTemplate.vm", "D://test.java", map);
     }
 }
